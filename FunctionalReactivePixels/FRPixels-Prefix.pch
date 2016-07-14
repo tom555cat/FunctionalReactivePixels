@@ -1,0 +1,24 @@
+//
+//  FRPixels-Prefix.pch
+//  FunctionalReactivePixels
+//
+//  Created by mcan on 11/07/16.
+//  Copyright © 2016 mcan. All rights reserved.
+//
+
+#ifndef FRPixels_Prefix_pch
+#define FRPixels_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+//Pods
+#import <ReactiveCocoa/ReactiveCocoa.h>
+#import <500px-iOS-api/PXAPI.h>
+#import <libextobjc/EXTScope.h>
+
+//AppDelegate
+#import "AppDelegate.h"
+#define MyAppDelegate ((FRPAppDelegate*)[[UIApplicationsharedApplication]delegate])
+
+#endif /* FRPixels_Prefix_pch */
