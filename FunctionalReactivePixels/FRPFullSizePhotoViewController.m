@@ -9,6 +9,8 @@
 #import "FRPFullSizePhotoViewController.h"
 #import "FRPPhotoModel.h"
 #import "FRPPhotoViewController.h"
+#import "FRPFullSizePhotoViewModel"
+
 @interface FRPFullSizePhotoViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 //Privateassignment
 @property(nonatomic,strong)NSArray*photoModelArray;
@@ -26,31 +28,34 @@
     self = [self init];
     if (!self) return nil;
     
-    // Initialized, read-only properties
-    self.photoModelArray = photoModelArray;
-    
-    // Configure self
-    self.title = [((FRPPhotoModel *)self.photoModelArray[photoIndex]) photoName];
-    
     // View controllers
-    self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll  navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionInterPageSpacingKey: @(30)}];
+    self.pageViewController = [[UIPageViewController alloc]
+                               initWithTransitionStyle:
+                               UIPageViewControllerTransitionStyleScroll
+                               navigationOrientation:
+                               UIPageViewControllerNavigationOrientationHorizontal
+                               options:
+                               @{UIPageViewControllerOptionInterPageSpacingKey: @(30)}];
     self.pageViewController.dataSource = self;
     self.pageViewController.delegate = self;
     [self addChildViewController:self.pageViewController];
+
+    // Configure child view controllers
+    [self.pageViewController setViewControllers:@[[self photoViewControllerForIndex: self.viewModel.initialPhotoIndex]]
+                                      direction:UIPageViewControllerNavigationDirectionForward
+                                       animated:NO completion:nil];
+    //Configureself
+    self.title=[self.viewModel.initialPhotoModel photoName];
     
-    [self.pageViewController
-     setViewControllers:@[[self photoViewControllerForIndex:photoIndex]]
-     direction:UIPageViewControllerNavigationDirectionForward
-     animated:NO
-     completion:nil];
     return  self;
     
 }
 
--(FRPPhotoViewController*)photoViewControllerForIndex:(NSInteger)index{
-    if (index >= 0 && index < self.photoModelArray.count) {
-        FRPPhotoModel *photoModel = self.photoModelArray[index];
-        FRPPhotoViewController *photoViewController = [[FRPPhotoViewController alloc] initWithPhotoModel:photoModel index:index];
+-(FRPPhotoViewController*)photoViewControllerForIndex:(NSInteger)index {
+    FRPPhotoModel *photoModel = [self.viewModel photoModelAtIndex:index];
+    if (photoModel) {
+        FRPPhotoViewModel *photoViewModel = [[FRPPhotoViewModel alloc] initWithModel:photoModel];
+        FRPPhotoViewController *photoViewController = [[FRPPhotoViewController alloc] initWithViewModel:photoViewModel index:index];
         return photoViewController;
     }
     return nil;

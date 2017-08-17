@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+@class FRPFullSizePhotoViewModel;
 
 @class FRPFullSizePhotoViewController;
 
@@ -21,7 +22,9 @@
 
 @interface FRPFullSizePhotoViewController : UIViewController
 
--(instancetype)initWithPhotoModels:(NSArray*)photoModelArray currentPhotoIndex:(NSInteger)photoIndex;
+//-(instancetype)initWithPhotoModels:(NSArray*)photoModelArray currentPhotoIndex:(NSInteger)photoIndex;
+
+@property (nonatomic, strong) FRPFullSizePhotoViewModel *viewModel;
 
 @property (nonatomic,readonly) NSArray *photoModelArray;
 @property (nonatomic,weak) id <FRPFullSizePhotoViewControllerDelegate> delegate;

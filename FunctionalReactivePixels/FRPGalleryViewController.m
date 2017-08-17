@@ -12,6 +12,8 @@
 #import "FRPPhotoImporter.h"
 #import "FRPCell.h"
 #import "FRPFullSizePhotoViewController.h"
+#import "FRPFullSizedPhotoViewModel.h"
+
 @interface FRPGalleryViewController ()
 
 @property(nonatomic,strong)NSArray*photosArray;
@@ -95,6 +97,8 @@ static NSString * const reuseIdentifier = @"Cell";
 //         viewController.delegate = (id<FRPFullSizePhotoViewControllerDelegate>)viewControllerDelegate;
 //         [self.navigationController pushViewController:viewController animated:YES];
 //     }];
+    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -155,7 +159,14 @@ static NSString * const reuseIdentifier = @"Cell";
 /** 使用RACDelegateProxy代替 **/
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    FRPFullSizePhotoViewController *viewController = [[FRPFullSizePhotoViewController alloc] initWithPhotoModels:self.photosArray currentPhotoIndex:indexPath.item];
+//    FRPFullSizePhotoViewController *viewController = [[FRPFullSizePhotoViewController alloc] initWithPhotoModels:self.photosArray currentPhotoIndex:indexPath.item];
+//    viewController.delegate = self;
+//    [self.navigationController pushViewController:viewController animated:YES];
+    FRPFullSizedPhotoViewModel *viewModel = [[FRPFullSizedPhotoViewModel alloc]
+                                             initWithPhotoArray:self.viewModel.model
+                                             initialPhotoIndex:indexPath.item];
+    FRPFullSizePhotoViewController *viewController = [[FRPFullSizePhotoViewController alloc] init];
+    viewController.viewModel = viewModel;
     viewController.delegate = self;
     [self.navigationController pushViewController:viewController animated:YES];
 }

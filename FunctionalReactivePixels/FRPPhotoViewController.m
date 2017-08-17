@@ -15,6 +15,9 @@
 #import "FRPPhotoImporter.h"
 #import <SVProgressHUD.h>
 
+//ViewModel
+#import "FRPPhotoViewModel.h"
+
 @interface FRPPhotoViewController ()
 
 //Privateassignment
@@ -24,11 +27,22 @@
 //Privateproperties
 @property(nonatomic,weak)UIImageView    *imageView;
 
+@property (nonatomic, strong) FRPPhotoViewModel *viewModel;
+
 @end
 
 @implementation FRPPhotoViewController
 
-
+- (instancetype)initWithViewModel:(FRPPhotoViewModel *)viewModel
+                            index:(NSInteger)photoIndex {
+    self = [self init];
+    if (!self) return nil;
+    
+    self.viewModel = viewModel;
+    self.photoIndex = photoIndex;
+    
+    return self;
+}
 
 -(instancetype)initWithPhotoModel:(FRPPhotoModel*)photoModel index:(NSInteger)photoIndex
 {
@@ -44,30 +58,41 @@
     
     self.view.backgroundColor = [UIColor blackColor];
     
+    // Configure subviews
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-    
-    /** 双向绑定 **/
-    RAC(imageView,image) = [RACObserve(self.photoModel, fullsizedData) map:^id(id value) {
-        return [UIImage imageWithData:value];
-    }];
-    
+    RAC(imageView, image) = RACObserve(self.viewModel, photoImage);
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:imageView];
     self.imageView = imageView;
+    
+    [RACObserve(self.viewModel, loading) subscribeNext:^(NSNumber *loading){
+        if (loading.boolValue) {
+            [SVProgressHUD show];
+        } else {
+            [SVProgressHUD dismiss];
+        }
+    }];
 }
 
 -(void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    [SVProgressHUD show];
+//    [SVProgressHUD show];
+//    
+//    // Fetch data
+//    [[FRPPhotoImporter fetchPhotoDetails:self.photoModel]
+//     subscribeError:^(NSError *error) {
+//         [SVProgressHUD showErrorWithStatus:@"Error"];
+//     } completed:^{
+//         [SVProgressHUD dismiss];
+//     }];
+    self.viewModel.active = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     
-    // Fetch data
-    [[FRPPhotoImporter fetchPhotoDetails:self.photoModel]
-     subscribeError:^(NSError *error) {
-         [SVProgressHUD showErrorWithStatus:@"Error"];
-     } completed:^{
-         [SVProgressHUD dismiss];
-     }];
+    self.viewModel.active = NO;
 }
 
 /*

@@ -1,5 +1,5 @@
 PODS:
-  - 500px-iOS-api (1.0.4)
+  - 500px-iOS-api (1.0.5)
   - libextobjc (0.4.1):
     - libextobjc/EXTADT (= 0.4.1)
     - libextobjc/EXTConcreteProtocol (= 0.4.1)
@@ -41,18 +41,24 @@ PODS:
   - ReactiveCocoa/Core (2.1.4):
     - ReactiveCocoa/no-arc
   - ReactiveCocoa/no-arc (2.1.4)
+  - ReactiveViewModel (0.1.1):
+    - ReactiveCocoa (~> 2.1)
   - SVProgressHUD (0.9)
 
 DEPENDENCIES:
-  - 500px-iOS-api (= 1.0.4)
+  - 500px-iOS-api (= 1.0.5)
   - libextobjc
   - ReactiveCocoa (= 2.1.4)
+  - ReactiveViewModel (= 0.1.1)
   - SVProgressHUD (= 0.9)
 
 SPEC CHECKSUMS:
-  500px-iOS-api: e1b28eaf9f389d5e9d694a19776b6f4937a7a6da
+  500px-iOS-api: d9e46cb6300cef1a12964641374aa467d3cfb891
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   ReactiveCocoa: 12072a1a4768b988f1f5a0a8c171c96bf021c2ff
+  ReactiveViewModel: 171492c2d30d3eb3c89730fd180c0f6a2ae7e774
   SVProgressHUD: 7038ae9d6a0bd2c87560d2699eba642eef82d41e
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: f7200673dcaa902cb1c2dbf4554f3200b39a9102
+
+COCOAPODS: 1.2.1
