@@ -6,6 +6,7 @@
 //  Copyright © 2016 mcan. All rights reserved.
 //
 
+#import <ReactiveCocoa/RACDelegateProxy.h>
 #import "FRPGalleryViewController.h"
 #import "FRPGalleryFlowLayout.h"
 #import "FRPPhotoImporter.h"
@@ -14,6 +15,8 @@
 @interface FRPGalleryViewController ()
 
 @property(nonatomic,strong)NSArray*photosArray;
+
+@property (nonatomic, strong) id collectionViewDelegate;
 
 @end
 
@@ -46,7 +49,52 @@ static NSString * const reuseIdentifier = @"Cell";
         [self.collectionView reloadData];
     }];
     
-    [self loadPopularPhotos];
+    //[self loadPopularPhotos];
+    /** 使用信号来代替loadPopularPhotos **/
+//    RACSignal *photoSignal = [FRPPhotoImporter importPhotos];
+//    RACSignal *photosLoaded = [photoSignal catch:^RACSignal *(NSError *error) {    // catch:非错误放行，错误留下
+//        NSLog(@"Couldn't fetch photos from 500px: %@", error);
+//        return [RACSignal empty];
+//    }];
+//    RAC(self, photosArray) = photosLoaded;
+//    [photosLoaded subscribeCompleted:^{
+//        @strongify(self);
+//        [self.collectionView reloadData];
+//    }];
+    
+    // 这个one-way binding是上面的简洁写法，将信号绑定到属性上
+    RAC(self, photosArray) = [[[[FRPPhotoImporter importPhotos]
+        doCompleted:^{                                                  // doCompleted
+            @strongify(self);
+            [self.collectionView reloadData];
+        }] logError] catchTo:[RACSignal empty]];
+    
+    /** 使用RACDelegateProxy来代替传统的Delegate实现方式 **/
+    
+    // FRPFullSizePhotoViewControllerDelegate代理在RAC中的使用
+//    RACDelegateProxy *viewControllerDelegate = [[RACDelegateProxy alloc]
+//        initWithProtocol:@protocol(FRPFullSizePhotoViewControllerDelegate)];
+//    
+//    [[viewControllerDelegate rac_signalForSelector:@selector(userDidScroll:toPhotoAtIndex:)
+//        fromProtocol:@protocol(FRPFullSizePhotoViewControllerDelegate)]
+//     subscribeNext:^(RACTuple *value) {
+//         @strongify(self);
+//         [self.collectionView scrollToItemAtIndexPath:
+//            [NSIndexPath indexPathForItem:[value.second integerValue] inSection:0]
+//            atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+//     }];
+    
+    // UICollectionViewDelegate代理在RAC中的使用
+//    self.collectionViewDelegate = [[RACDelegateProxy alloc]
+//        initWithProtocol:@protocol(UICollectionViewDelegate)];
+//    [[self.collectionViewDelegate rac_signalForSelector:@selector(collectionView:didSelectItemAtIndexPath:)]
+//     subscribeNext:^(RACTuple *arguments) {
+//         @strongify(self);
+//         FRPFullSizePhotoViewController *viewController = [[FRPFullSizePhotoViewController alloc]
+//            initWithPhotoModels:self.photosArray currentPhotoIndex:[(NSIndexPath *)arguments.second item]];
+//         viewController.delegate = (id<FRPFullSizePhotoViewControllerDelegate>)viewControllerDelegate;
+//         [self.navigationController pushViewController:viewController animated:YES];
+//     }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -54,14 +102,14 @@ static NSString * const reuseIdentifier = @"Cell";
     // Dispose of any resources that can be recreated.
 }
 
-- (void)loadPopularPhotos{
-    [[FRPPhotoImporter importPhotos] subscribeNext:^(id x) {
-        self.photosArray = x;
-    } error:^(NSError *error) {
-        NSLog(@"Couldn't fetch photos from 500px: %@",
-              error);
-    }];
-}
+//- (void)loadPopularPhotos{
+//    [[FRPPhotoImporter importPhotos] subscribeNext:^(id x) {
+//        self.photosArray = x;
+//    } error:^(NSError *error) {
+//        NSLog(@"Couldn't fetch photos from 500px: %@",
+//              error);
+//    }];
+//}
 
 /*
  #pragma mark - Navigation
@@ -72,6 +120,9 @@ static NSString * const reuseIdentifier = @"Cell";
  // Pass the selected object to the new view controller.
  }
  */
+
+
+/** 使用RACDelegateProxy代替 **/
 
 -(void)userDidScroll:(FRPFullSizePhotoViewController*)viewController toPhotoAtIndex:(NSInteger)index {
     [self.collectionView scrollToItemAtIndexPath:
@@ -100,6 +151,8 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 #pragma mark <UICollectionViewDelegate>
+
+/** 使用RACDelegateProxy代替 **/
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     FRPFullSizePhotoViewController *viewController = [[FRPFullSizePhotoViewController alloc] initWithPhotoModels:self.photosArray currentPhotoIndex:indexPath.item];

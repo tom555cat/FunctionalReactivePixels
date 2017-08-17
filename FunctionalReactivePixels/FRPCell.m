@@ -10,8 +10,8 @@
 
 @interface FRPCell()
 
-@property   (nonatomic,weak)   UIImageView*imageView;
-@property   (nonatomic,strong) RACDisposable*subscription;
+@property (nonatomic,weak)   UIImageView* imageView;
+@property (nonatomic,strong) RACDisposable* subscription;
 
 @end
 
@@ -35,14 +35,15 @@
 }
 
 -(void)setPhotoModel:(FRPPhotoModel*)photoModel{
+    /** RACObserve **/
     self.subscription = [[[RACObserve(photoModel, thumbnailData) filter:^BOOL(id value) {
-        return value != nil; }] map:^id(id value) {
+            return value != nil;
+        }] map:^id(id value) {
             return [UIImage imageWithData:value];
-        }] setKeyPath:@keypath(self.imageView, image)
-     onObject:self.imageView];
+        }] setKeyPath:@keypath(self.imageView, image) onObject:self.imageView];
 }
 
--(void)  prepareForReuse{
+-(void)prepareForReuse{
     [super prepareForReuse];
     [self.subscription dispose], self.subscription = nil;
 }

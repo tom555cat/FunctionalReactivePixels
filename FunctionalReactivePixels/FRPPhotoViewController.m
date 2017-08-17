@@ -45,6 +45,8 @@
     self.view.backgroundColor = [UIColor blackColor];
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+    
+    /** 双向绑定 **/
     RAC(imageView,image) = [RACObserve(self.photoModel, fullsizedData) map:^id(id value) {
         return [UIImage imageWithData:value];
     }];

@@ -193,7 +193,7 @@
 				TargetAttributes = {
 					CAB7491C1D33D5C700CF224C = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = TTPCM9Q8V2;
+						DevelopmentTeam = 8VXJWE28Q2;
 					};
 				};
 			};
@@ -404,6 +404,7 @@
 			baseConfigurationReference = EDDB3645049D8558B545BA47 /* Pods-FunctionalReactivePixels.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 8VXJWE28Q2;
 				GCC_PREFIX_HEADER = "FunctionalReactivePixels/FRPixels-Prefix.pch";
 				INFOPLIST_FILE = FunctionalReactivePixels/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -417,6 +418,7 @@
 			baseConfigurationReference = 6C0D325733B7111599BD185A /* Pods-FunctionalReactivePixels.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 8VXJWE28Q2;
 				GCC_PREFIX_HEADER = "FunctionalReactivePixels/FRPixels-Prefix.pch";
 				INFOPLIST_FILE = FunctionalReactivePixels/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
