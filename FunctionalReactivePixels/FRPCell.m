@@ -31,17 +31,24 @@
     [self.contentView addSubview:imageView];
     self.imageView = imageView;
     
+    // RACObserve相当于KVO，第一个参数是self
+    RAC(self.imageView, image) = [[RACObserve(self, photoModel.thumbnailData)
+        ignore:nil] map:^id(NSData *data) {
+        return [UIImage imageWithData:data];
+    }];
+    
     return self;
 }
 
--(void)setPhotoModel:(FRPPhotoModel*)photoModel{
-    /** RACObserve **/
-    self.subscription = [[[RACObserve(photoModel, thumbnailData) filter:^BOOL(id value) {
-            return value != nil;
-        }] map:^id(id value) {
-            return [UIImage imageWithData:value];
-        }] setKeyPath:@keypath(self.imageView, image) onObject:self.imageView];
-}
+/** 使用RAC+RACObserve宏来代替set方法 **/
+//-(void)setPhotoModel:(FRPPhotoModel*)photoModel{
+//    /** RACObserve **/
+//    self.subscription = [[[RACObserve(photoModel, thumbnailData) filter:^BOOL(id value) {
+//            return value != nil;
+//        }] map:^id(id value) {
+//            return [UIImage imageWithData:value];
+//        }] setKeyPath:@keypath(self.imageView, image) onObject:self.imageView];
+//}
 
 -(void)prepareForReuse{
     [super prepareForReuse];
