@@ -49,7 +49,7 @@
     }
 }
 
-+ (NSString *) urlForImageSize:(NSInteger)size inDictionary:(NSDictionary *) array{
++ (NSString *) urlForImageSize:(NSInteger)size inDictionary:(NSArray *) array{
     return [[[[[array rac_sequence] filter:^BOOL(NSDictionary *value) {
         return [value[@"size"] integerValue] == size;
     }] map:^id(id value) {
